@@ -1,0 +1,4 @@
+{
+  "rootPath":"/",
+  "postgresURL":"postgres://postgres:8929c@localhost:5432/postgres"
+}
