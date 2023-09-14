@@ -3,7 +3,7 @@ const fastify = require("fastify")({
 });
 
 fastify.register(require("@fastify/postgres"), {
-  connectionString: "postgres://postgres:8929c@127.0.0.1:5432/js_shop",
+  connectionString: "postgres://postgres:1234cc@127.0.0.1:5432/js_shop",
 });
 
 const routes = require("./routes"); 
