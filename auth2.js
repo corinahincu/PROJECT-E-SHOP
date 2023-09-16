@@ -14,7 +14,7 @@ async function signIn(email, password, fastify) {
       return null; // User not found
     }
 
-    // Generate a session_id using a UUID library (e.g., uuidv4)
+    // Generate a session_id using a UUID library 
     const session_id = uuidv4();
     const client_id = rows[0].id // to get the client's id
 
