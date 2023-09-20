@@ -17,12 +17,12 @@ fastify.register(require("@fastify/postgres"), {
 });
 
 fastify.decorate("testMiddleware", async (request, reply) => {
-  console.log("TEST!!!");
-  fastify.log.info("TEST!!!");
-});
+  console.log("TEST!!!")
+  fastify.log.info("TEST!!!")
+})
 
 fastify.addHook("preHandler", async (request, reply) => {
-  fastify.testMiddleware(request, reply);
+  fastify.testMiddleware(request, reply)
 });
 
 
