@@ -8,13 +8,23 @@ const {signIn,signOut}= require("./auth2")
     user: "postgres",
     host: "127.0.0.1",
     database: "js_shop",
-    password: "1234c",
+    password: "8929c",
     port: 5432,
   });
 fastify.decorate("pgPool",pool)
 fastify.register(require("@fastify/postgres"), {
   pool: fastify.pgPool,
 });
+
+fastify.decorate("testMiddleware", async (request, reply) => {
+  console.log("TEST!!!");
+  fastify.log.info("TEST!!!");
+});
+
+fastify.addHook("preHandler", async (request, reply) => {
+  fastify.testMiddleware(request, reply);
+});
+
 
 fastify.post("/auth/signin", async (req, reply) => {
   const { email, password } = req.body;
