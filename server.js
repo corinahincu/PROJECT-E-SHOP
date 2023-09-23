@@ -11,7 +11,7 @@ const {signIn,signOut}= require("./auth")
     user: "postgres",
     host: "127.0.0.1",
     database: "js_shop",
-    password: "8929c",
+    password: "1234c",
     port: 5432,
   });
 fastify.decorate("pgPool",pool)
