@@ -1,4 +1,4 @@
-const { authorizeSession } = require("./authorizationMiddleware");
+
 module.exports = function (fastify, pool) {
   // GET /clients
   fastify.get("/clients", async (req, reply) => {
@@ -12,16 +12,12 @@ module.exports = function (fastify, pool) {
     }
   });
 
-  // addHook/preHandler
-  // Define the route with preHandler and handler
   fastify.get("/clients/:id", {
   preHandler: async (request, reply) => {
     const clientId = request.params.id;
     const session_id = request.query.session_id;
-
-    // Check if session_id is provided in the query parameters
+    
     if (!session_id) {
-      // If no session_id is provided, respond with id and username
       const clientQueryResult = await pool.query(
         "SELECT id, name FROM clients WHERE id = $1",
         [clientId]
@@ -33,24 +29,19 @@ module.exports = function (fastify, pool) {
         const clientData = clientQueryResult.rows[0];
         reply.send(clientData);
       }
-    } // No need to define the handler here
-
-    // Handler function should be defined at the same level as preHandler
+    } 
   },
   handler: async (request, reply) => {
     const clientId = request.params.id;
     const session_id = request.query.session_id;
 
-    // Check if session_id is provided in the query parameters
     if (session_id) {
-      // If session_id is provided, perform session authorization
       try {
         const { rows } = await pool.query(
           "SELECT client_id FROM client_sessions WHERE session_id = $1",
           [session_id]
         );
 
-        // Check if the session_id is valid and matches the client's ID
         if (rows.length === 0 || rows[0].client_id !== clientId) {
           reply
             .code(401)
@@ -63,7 +54,6 @@ module.exports = function (fastify, pool) {
         return;
       }
 
-      // If session is authorized, return complete client's data
       const clientQueryResult = await pool.query(
         "SELECT * FROM clients WHERE id = $1",
         [clientId]
@@ -114,14 +104,12 @@ module.exports = function (fastify, pool) {
       const session_id = request.query.session_id;
 
       if (session_id) {
-        // If session_id is provided, perform session authorization
         try {
           const { rows } = await pool.query(
             "SELECT client_id FROM client_sessions WHERE session_id = $1",
             [session_id]
           );
 
-          // Check if the session_id is valid and matches the client's ID
           if (rows.length === 0 || rows[0].client_id !== clientId) {
             reply
               .code(401)
@@ -134,14 +122,12 @@ module.exports = function (fastify, pool) {
           return;
         }
       }
-      // Continue with the request as authorized if session_id is not provided
     },
     handler: async (request, reply) => {
       const clientId = request.params.id;
       const updatedClientData = request.body;
 
       try {
-        // Check if the client with the given ID exists
         const { rows: clientQueryResult } = await pool.query(
           "SELECT * FROM clients WHERE id = $1",
           [clientId]
@@ -152,7 +138,6 @@ module.exports = function (fastify, pool) {
           return;
         }
 
-        // Update the client's data based on the request body
         const { rows } = await pool.query(
           `
         UPDATE clients
@@ -180,7 +165,6 @@ module.exports = function (fastify, pool) {
           return;
         }
 
-        // Respond with the updated client data
         reply.send(rows[0]);
       } catch (error) {
         console.error("Error", error);
@@ -190,9 +174,6 @@ module.exports = function (fastify, pool) {
     },
   });
 
-
-
-  // DELETE / clients/:id
   // DELETE /clients/:id
 fastify.delete(
   "/clients/:id",
@@ -201,16 +182,13 @@ fastify.delete(
       const clientId = request.params.id;
       const session_id = request.query.session_id;
 
-      // Check if session_id is provided in the query parameters
       if (session_id) {
-        // If session_id is provided, perform session authorization
         try {
           const { rows } = await pool.query(
             "SELECT client_id FROM client_sessions WHERE session_id = $1",
             [session_id]
           );
-
-          // Check if the session_id is valid and matches the client's ID
+          
           if (rows.length === 0 || rows[0].client_id !== clientId) {
             reply.code(401).send({ status: "error", message: "Not authorized" });
             return;
@@ -221,7 +199,6 @@ fastify.delete(
           return;
         }
       }
-      // Continue with the request as authorized if session_id is not provided
     },
     handler: async (req, reply) => {
       const clientId = req.params.id;
