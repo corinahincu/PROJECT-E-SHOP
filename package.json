@@ -1,0 +1,23 @@
+{
+  "name": "e_shop_ff_orm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "../public/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -p tsconfig.json",
+    "start": "node ./public/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^4.23.2",
+    "fastify-typeorm-plugin": "^2.2.1",
+    "typeorm": "^0.3.17"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.0",
+    "typescript": "^5.2.2"
+  }
+}
