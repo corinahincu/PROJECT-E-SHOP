@@ -1,7 +1,9 @@
-import { Entity } from 'typeorm';
+import { Column } from "typeorm/index.js";
 
-@Entity()
 export class Money {
-  amount!: number;
-  currency!: string;
+    @Column("integer")
+    amount!: number; 
+
+    @Column()
+    currency!: string;
 }

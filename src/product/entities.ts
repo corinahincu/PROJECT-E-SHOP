@@ -4,12 +4,12 @@ import { Money } from '../financial/entities';
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn()
-  id!: number;
+  public id!: number;
 
   @Column()
-  name!: string;
+  public name!: string;
 
   @Column(() => Money)
-  price!: Money;
+  public price!: Money;
   // embeddable entity
 }
