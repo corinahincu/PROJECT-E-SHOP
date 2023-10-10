@@ -1,26 +1,23 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const typeorm_1 = require("typeorm");
-const entities_js_1 = require("./entities.js");
-const entities_js_2 = require("../financial/entities.js");
+import { Product } from './entities.js';
+import { Money } from '../financial/entities.js';
+import { ProductRequest } from './schemaValidator.js';
 const ProductRoute = async (fastify) => {
-    fastify.post('/products', async (request, reply) => {
-        try {
-            let requestBody = request.body;
-            const product = new entities_js_1.Product();
-            const money = new entities_js_2.Money();
-            product.name = requestBody.name;
-            money.amount = requestBody.amount;
-            money.currency = requestBody.currency;
-            product.price = money;
-            const productRepository = (0, typeorm_1.getRepository)(entities_js_1.Product);
-            await productRepository.save(product);
-            reply.status(200).send({ message: 'Product created successfully' });
+    fastify.post('/products', {
+        schema: {
+            body: ProductRequest,
+            response: {
+                200: ProductRequest
+            }
         }
-        catch (error) {
-            console.error('Error creating product:', error);
-            reply.status(500).send({ message: 'Internal server error' });
-        }
+    }, async (request, reply) => {
+        const product = new Product();
+        const { name, amount, currency } = request.body;
+        product.price = new Money();
+        product.name = name;
+        product.price.amount = amount;
+        product.price.currency = currency;
+        await fastify.orm.manager.save(product);
+        return reply.status(200).send({ name, amount, currency, message: 'Product created successfully' });
     });
 };
-exports.default = ProductRoute;
+export default ProductRoute;

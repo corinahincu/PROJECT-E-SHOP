@@ -1,4 +1,4 @@
-import { Column } from "typeorm/index.js";
+import { Column } from "typeorm";
 
 export class Money {
     @Column("integer")
