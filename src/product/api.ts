@@ -1,37 +1,35 @@
 import {FastifyInstance} from 'fastify'
-import { getRepository } from 'typeorm'
 import {Product} from './entities.js'
 import { Money } from '../financial/entities.js'
+import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
+import { ProductRequest, ProductReply, ProductRequestType} from './schemaValidator.js'
 
-interface ProductRequest {
-  id: number;
-  name: string;
-  amount: number;
-  currency: string;
-}
 
 const ProductRoute = async (fastify: FastifyInstance) => {
-  fastify.post('/products', async (request, reply) => {
-    try {
 
-      let requestBody: ProductRequest = request.body as ProductRequest
+  fastify.post('/products', 
+  {
+    schema:{
+      body: ProductRequest,
+      response: {
+        200: ProductRequest
+      }
+    }
+  },
+  async (request, reply) => {
 
       const product = new Product();
-      const money = new Money();
-      product.name = requestBody.name;
-      money.amount = requestBody.amount;
-      money.currency = requestBody.currency;
-      product.price = money;
+      const { name, amount,currency} = request.body as ProductRequestType
+      product.price = new Money()
 
-      const productRepository = getRepository(Product);
-      await productRepository.save(product);
+      product.name = name;
+      product.price.amount = amount;
+      product.price.currency = currency;
 
-      reply.status(200).send({ message: 'Product created successfully' });
-    } catch (error) {
-      console.error('Error creating product:', error);
-      reply.status(500).send({ message: 'Internal server error' });
+      await fastify.orm.manager.save(product)
+      return reply.status(200).send({ name, amount,currency, message: 'Product created successfully' });
     }
-  });
+  );
 };
     export default ProductRoute
 

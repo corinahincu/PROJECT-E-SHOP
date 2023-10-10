@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { Money } from '../financial/entities';
+import { Money } from '../financial/entities.js';
 
 @Entity()
 export class Product {
